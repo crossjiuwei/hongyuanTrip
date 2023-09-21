@@ -1,0 +1,162 @@
+:root {
+
+
+  --main-bg-color:#ff9854;
+  --line-color: #faf8f9;
+  --theme-liner-gradient:linear-gradient(90deg,#fa8c1d,#fcaf3f);
+  --back-color-gradient:linear-gradient(270deg,#f66,#ff9f9f);
+
+  
+}
+.line-bottom--color {
+  border-bottom: 1px solid var(--line-color);
+}
+
+.section {
+  display: flex;
+  padding:  0 20px;
+  height: 45px;
+  align-items: center;
+  color: #999;
+  font-size: 14px;
+
+   .start {
+    display: flex;
+    flex: 1;
+    .stay {
+      flex: 1;
+      text-align: center;
+      font-size: 12px;
+      color: #666;
+      line-height: 31px;
+    }
+  
+   }
+   .end {
+    width: 100px;
+   }
+
+   .date {
+      display: flex;
+      flex-direction: column;
+      color: #333;
+      /* align-items: center; */
+      width: 70px;
+      .tip {
+        font-size: 12px;
+        color: #999;
+
+      }
+      .time {
+        
+        font-size: 15px;
+      }
+    }
+
+}
+
+.overflow {
+  overflow:hidden;
+  text-overflow:ellipsis;
+  display:-webkit-box;
+  -webkit-box-orient:vertical;
+  -webkit-line-clamp:2;
+}
+
+
+
+.houseList {
+  display: flex;
+  flex-wrap: wrap;
+ }
+.content {
+  padding: 2.66667vw 2.13333vw;
+  .item-v9 {
+      color:#fff;
+    }
+    .item-v3 {
+      color: #333;
+    }
+
+  .house-item {
+    position: relative;
+    
+  
+    width: 50%;
+    height: 240px;
+   
+    
+    .item-inner {
+     
+   
+     
+      margin: 1.33333vw;
+      font-size: 12px;
+      
+
+
+      .info {
+        position: absolute;
+        bottom: 10px;
+        padding: 2.13333vw 2.66667vw;
+        .name {
+          width: 148px;
+          font-size: 16px;
+          margin: 1.33333vw 0;
+       
+          
+        }
+        .location {
+         
+          .img {
+            position: relative;
+            top: -1px;
+          }
+        }
+        .price {
+
+          display: flex;
+          justify-content: space-between;
+      
+          font-size: 16px;
+          align-items: center;
+          line-height: 16px;
+
+          .new {
+            font-size: 14px;
+            color: var(--main-bg-color);
+            margin-right: 2px;
+          }
+          .old {
+           font-size: 12px;
+            text-decoration:line-through;
+            color: #999;
+            margin-right: 2px;
+          
+          }
+          .tip {
+            font-size: 12px;
+            background-image:var(--back-color-gradient);
+            color:#fff;
+            padding: 0 1.6vw;
+            border-radius: 2.13333vw;
+
+          }
+        }
+      }
+    }
+  
+ 
+
+   
+
+   
+    .img {
+      width: 100%;
+      /* height: 223px; */
+      border-radius: 1.6vw;
+
+    }
+ }
+}
+ 
