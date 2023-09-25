@@ -1,16 +1,40 @@
 
 <script setup>
    import { useRoute,useRouter } from 'vue-router';
-   import useHouseInfo from '../../../stores/moudles/houseinfo'
+   import useHouseInfo from '../../stores/moudles/houseinfo.js'
 
-import { storeToRefs } from 'pinia';
-import { watch,ref } from 'vue';
+   import { storeToRefs } from 'pinia';
+   import { watch,ref } from 'vue';
 
+   import useStoreCommon from '../../stores/moudles/common';
+
+   import messageinfo from './message-info.vue'
+   import slotSection from './slot-section.vue'
+
+   import houseFacilities  from './houseFacilities.vue'
+   import houseLandlord from './houseLandlord.vue'
+   import houseCommentBrief from './houseCommentBrief.vue'
+   import houseNotice from './houseNotice.vue';
+   import houseMap from './houseMap.vue';
+   import getdata  from '../../services/moudles/house.info.js'
+
+   import houseIntro from '../../views/houseinfo/house-intro.vue'
 
   const route =  useRoute()
   const router = useRouter()
   const houseInfo =  useHouseInfo()
+  const useCommon = useStoreCommon()
+
+ 
   houseInfo.gethouseInfo(route.query.houseId)
+
+  getdata(route.query.houseId).then(res=>{
+  // console.log(res);
+
+   res.data.mainPart.dynamicModule.positionModule 
+
+   
+})
 
   
  
@@ -20,15 +44,38 @@ import { watch,ref } from 'vue';
  
 
   const picArray =ref({})
+  const houseMain = ref({})
+  const dynamicModule = ref({})
+
+  const landlordModule = ref({})
+  const commentModule = ref({})
+
+  const rulesModule = ref({})
+
+
 
   let picData = ref({})
 
+ 
+  
+
   watch( houseinfo,(newvalue)=>{
-//   console.log(newvalue.data?.mainPart.topModule.housePicture);
-   const housepic=newvalue.data?.mainPart.topModule.housePicture
+   
+    dynamicModule.value = newvalue.data?.mainPart?.dynamicModule 
+    landlordModule.value = dynamicModule.value?.landlordModule
+    commentModule.value = dynamicModule.value?.commentModule
+    rulesModule.value = dynamicModule.value?.rulesModule
+
+  
+
+     useCommon.latitude = dynamicModule.value.positionModule.latitude
+     useCommon.longitude = dynamicModule.value.positionModule.longitude
+       
+    houseMain.value =newvalue.data?.mainPart?.topModule
+   const housepic=houseMain.value?.housePicture
    
     picData.value = housepic
-   for(const key in housepic.housePics ) {
+   for(const key in housepic?.housePics ) {
      if(!picArray.value[housepic.housePics[key].enumPictureCategory] ) {
       picArray.value[housepic.housePics[key].enumPictureCategory] = []
      }
@@ -39,9 +86,18 @@ import { watch,ref } from 'vue';
    
    }
 
+
+   
+
   })
 
+
+   
+  
+
 //   console.log(picData.value.housePics);
+
+
  
 
    // 正则表达式
@@ -57,8 +113,8 @@ import { watch,ref } from 'vue';
      if(a!==-1) {
 
       
-      currentIndex.value=picArray.value[key].length
-    
+      currentIndex.value=key
+      // console.log(key);
        return a+1
      }
    
@@ -81,6 +137,9 @@ import { watch,ref } from 'vue';
       })
       
    }
+
+
+
    
 </script>
 
@@ -93,7 +152,7 @@ import { watch,ref } from 'vue';
          <div class="van-nav-bar van-hairline--bottom">
             <div class="van-nav-bar__content">
              <div class="van-nav-bar__left" @click="click">
-                 <div class="van-icon">&lt;</div>
+               <van-icon name="arrow-left" />
                  <div class="van-nav-bar__text">旅途</div>
              </div>
 
@@ -113,18 +172,18 @@ import { watch,ref } from 'vue';
 
                <template v-for="(type,key,index) in picArray " :key="key">
                   <van-swipe-item v-for="(value,index) in type">
-                    <img class="img" :src="value.url" />
+                    <img style="width: 100%;" class="img" :src="value.url" />
                   </van-swipe-item>
                </template>
                   
                <template #indicator="{ active, total } " >
                   <div  class="custom-indicator" >
                      <!-- {{ isactiveFunction(active) }} -->
-                        <div  v-for="(item,index) in picArray" class="item" :class="{isactive:currentIndex===item.length}">
+                        <div  v-for="(item,index) in picArray" class="item" :class="{isactive:currentIndex===index}">
 
                            <div>
-                              {{ item[0].title.replaceAll(/[【】]/g,'')  }}
-                              <span>
+                              {{ item[0].title.replaceAll(/[【】： ]/g,'')  }}
+                              <span v-show="currentIndex===index">
                                  {{ isactiveFunction(active) }}/{{item.length }}
                               </span>
                              
@@ -141,8 +200,48 @@ import { watch,ref } from 'vue';
                </van-swipe>
                
            </div>
+
+           <messageinfo :data="houseMain"/>
+
+           <slotSection more1="查看全部设施"  title1="房屋设施">
+             <houseFacilities :dynamicModule1="dynamicModule"></houseFacilities>
+           </slotSection>
+
+
+           <slotSection more1="查看房东主页"  title1="房东介绍">            
+             <houseLandlord :landlorModule1="landlordModule"></houseLandlord>
+           </slotSection>
+
+           <slotSection more1="查看全部37条评论"  title1="热门评论">
+              <houseCommentBrief :commentModule1="commentModule"/>
+            </slotSection>
+
+
+            <slotSection more1="预定须知"  title1="预定须知">
+              <houseNotice :rulesModule1="rulesModule"/>
+            </slotSection>
+
+            <slotSection more1="查看更多周边信息"  title1="位置周边">
+              <houseMap/>
+            </slotSection>
+
+             
+               <houseIntro/>
+            
+          
+
+
+
+        
+
+
+
        </div>
-      
+       
+       <div class="footer">
+         <img class="img" src="../../assets/img/detail/下载.png" alt="">
+         <div class="text">弘源旅途, 永无止境!</div>
+       </div>
 
    </div>
 
@@ -198,11 +297,14 @@ import { watch,ref } from 'vue';
       .item {
          display: flex;
          color: #fff;
+         // height: 11px;
          line-height: 1;
-         display: none;
+         margin-right: 2px;
+
+         // display: none;
 
          &.isactive {
-            padding: 2px;
+            padding:1 4px;
             border-radius: 1.33333vw;
             background-color: #fff;
             color: #333;
@@ -213,6 +315,23 @@ import { watch,ref } from 'vue';
 
      
   }
+
+      .footer {
+         display: flex;
+         flex-direction: column;
+         align-items: center;
+         justify-content: center;
+         height: 32vw;
+
+         .img {
+            width: 32.8vw
+         }
+         .text {
+            margin-top: 3.2vw;
+            font-size: 3.2vw;
+            color: #7688a7;
+         }
+      }
 
      
 

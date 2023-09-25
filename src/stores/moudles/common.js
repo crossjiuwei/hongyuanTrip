@@ -6,10 +6,14 @@ export default defineStore('comomon',{
     nowDate: new Date(),
     passDate:new Date().setDate(new Date().getDate()+1),
     nowdayjs : '',
-    passdayjs : ''
+    passdayjs : '',
+    latitude:'',
+    longitude:''
   }),
 
   actions:{
+
+
 
     gettime() {
 

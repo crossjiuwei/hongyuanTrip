@@ -47,7 +47,7 @@ export default createRouter({
     {
 
       path:'/houseinfo',
-      component:()=>import('../views/home/cfns/house-info.vue'),
+      component:()=>import('../views/houseinfo/house-info.vue'),
       meta:{
         disshow:true
       }

@@ -16,7 +16,7 @@ export default defineStore('home',{
 
    const hotdata =  await getHotSuggest()
 
-       this.hotSuggests  =  hotdata
+   this.hotSuggests  =  hotdata
       
     },
 
